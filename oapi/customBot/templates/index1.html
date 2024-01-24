@@ -1,0 +1,119 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .chat {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 10px;
+      overflow-y: scroll;
+      max-height: 400px;
+    }
+
+    .message {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 70%;
+    }
+
+    .received {
+      background-color: #f2f2f2;
+      align-self: flex-start;
+    }
+
+    .sent {
+      background-color: #dcf8c6;
+      align-self: flex-end;
+    }
+
+    .message-input {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    .message-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .message-input button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+  <title>Chat with Assistant</title>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat" id="chat-container">
+      <!-- Existing messages go here -->
+    </div>
+    <div class="message-input">
+      <input type="text" id="user-input" placeholder="Type your message...">
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatContainer = document.getElementById('chat-container');
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+
+      sendButton.addEventListener('click', async function () {
+        const userMessage = userInput.value;
+        console.log("user message", userMessage);
+        try {
+          const response = await fetch('http://localhost:3000/answer', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              question: userMessage,
+              assitant_id: 'asst_8klujY8GWez2QcUITxD6AFlQ',  // Replace with your actual assistant ID
+            }),
+          });
+
+          const data = await response.json();
+
+          // Add the assistant's response to the chat
+          const assistantResponseDiv = document.createElement('div');
+          assistantResponseDiv.className = 'message received';
+          assistantResponseDiv.innerHTML = `<div class="message-content">${data.answer}</div>`;
+          chatContainer.appendChild(assistantResponseDiv);
+
+          // Clear the user input
+          userInput.value = '';
+        } catch (error) {
+          console.error('Error asking question:', error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+ -->

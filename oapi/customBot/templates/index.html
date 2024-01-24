@@ -1,119 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
-    .chat-container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+    </head>
+    <body>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Custom AI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    .chat {
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 10px;
-      overflow-y: scroll;
-      max-height: 400px;
-    }
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+            </ul>
+           
+        </div>
+        </nav>
+        <div class="row my-5 mx-3">
+            <div class="col-sm-6 ">
+                <div class="container-fluid">
+                    <form method="post" action="{% url 'askAi' %}">
+                        {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">User Name</label>
+                        <input type="text" class="form-control" name="username" aria-describedby="emailHelp" placeholder="Enter Username">
+                        <!-- <small name="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group my-2">
+                        <label for="exampleFormControlTextarea1">Ask me anything</label>
+                        <textarea class="form-control" name="question" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary my-2">Submit</button>
+                    </form>
+                    {% if answer %}
+                    <div class="form-group my-2">
+                        <label for="exampleFormControlTextarea1">Ask me anything</label>
+                        <textarea class="form-control" name="question" rows="3" disabled placeholder="{{ answer }}"></textarea>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-sm-6 my-2">
+     
 
-    .message {
-      margin: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      max-width: 70%;
-    }
-
-    .received {
-      background-color: #f2f2f2;
-      align-self: flex-start;
-    }
-
-    .sent {
-      background-color: #dcf8c6;
-      align-self: flex-end;
-    }
-
-    .message-input {
-      display: flex;
-      margin-top: 20px;
-    }
-
-    .message-input input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .message-input button {
-      padding: 10px 20px;
-      border: none;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
-  <title>Chat with Assistant</title>
-</head>
-<body>
-  <div class="chat-container">
-    <div class="chat" id="chat-container">
-      <!-- Existing messages go here -->
-    </div>
-    <div class="message-input">
-      <input type="text" id="user-input" placeholder="Type your message...">
-      <button id="send-button">Send</button>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const chatContainer = document.getElementById('chat-container');
-      const userInput = document.getElementById('user-input');
-      const sendButton = document.getElementById('send-button');
-
-      sendButton.addEventListener('click', async function () {
-        const userMessage = userInput.value;
-        console.log("user message", userMessage);
-        try {
-          const response = await fetch('http://localhost:3000/answer', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              question: userMessage,
-              assitant_id: 'asst_8klujY8GWez2QcUITxD6AFlQ',  // Replace with your actual assistant ID
-            }),
-          });
-
-          const data = await response.json();
-
-          // Add the assistant's response to the chat
-          const assistantResponseDiv = document.createElement('div');
-          assistantResponseDiv.className = 'message received';
-          assistantResponseDiv.innerHTML = `<div class="message-content">${data.answer}</div>`;
-          chatContainer.appendChild(assistantResponseDiv);
-
-          // Clear the user input
-          userInput.value = '';
-        } catch (error) {
-          console.error('Error asking question:', error);
-        }
-      });
-    });
-  </script>
-</body>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Asst ID</th>
+      <th scope="col">Thread ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in users %}
+    <tr>
+      <th scope="row">{{ i.id }}</th>
+      <td>{{ i.username }}</td>
+      <td>{{ i.assitantId }}</td>
+      <td>{{ i.threadID }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+            </div>
+        </div>
+    </body>
 </html>
-
-
-
