@@ -1,3 +1,4 @@
+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
 # DjangoOpenAI
 Custom function call using openai and assitants to automate the task
 
