@@ -1,4 +1,4 @@
-# Django Gemini - Content Genration Web APP
+# Django OpenAI - Content Genration Web APP
 
 ## Prerequisites
 
